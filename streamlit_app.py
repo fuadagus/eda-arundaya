@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import altair as alt
 from datetime import timedelta, datetime
 
 # Set page config
@@ -44,13 +45,29 @@ def get_quarterly_data(df):
     return aggregate_data(df, 'Q')
 
 def create_metric_chart(df, column, chart_type, height=150, time_frame='Daily'):
-    chart_data = df[[column]].copy()
+    chart_data = df[[column]].reset_index()
+    chart_data.columns = ['date', 'value']
+
     if time_frame == 'Quarterly':
-        chart_data.index = chart_data.index.strftime('%Y Q%q ')
+        chart_data['date'] = chart_data['date'].dt.to_period('Q').astype(str)
+    
+    y_min = chart_data['value'].min()
+    y_max = chart_data['value'].max()
+
     if chart_type == 'Bar':
-        st.bar_chart(chart_data, y=column, height=height)
-    if chart_type == 'Area':
-        st.area_chart(chart_data, y=column, height=height)
+        chart = alt.Chart(chart_data).mark_bar().encode(
+            x='date:T',
+            y=alt.Y('value:Q', scale=alt.Scale(domain=[y_min, y_max])),
+            tooltip=['date:T', 'value:Q']
+        )
+    elif chart_type == 'Area':
+        chart = alt.Chart(chart_data).mark_area().encode(
+            x='date:T',
+            y=alt.Y('value:Q', scale=alt.Scale(domain=[y_min, y_max])),
+            tooltip=['date:T', 'value:Q']
+        )
+
+    st.altair_chart(chart, use_container_width=True)
 
 def calculate_delta(df, column):
     if len(df) < 2:
