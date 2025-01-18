@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-import altair as alt
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 # Set page config
 st.set_page_config(page_title="Environmental Data Dashboard", layout="wide")
@@ -45,36 +44,13 @@ def get_quarterly_data(df):
     return aggregate_data(df, 'Q')
 
 def create_metric_chart(df, column, chart_type, height=150, time_frame='Daily'):
-    chart_data = df[[column]].reset_index()
-    chart_data.columns = ['date', 'value']
-    
-    # Set static min and max based on context
-    y_min_max = {
-        "temperature": (-10, 50),  # Example range for temperature in °C
-        "humidity": (0, 100),      # Humidity in percentage
-        "heat_index": (0, 60),     # Heat index in °C
-        "pH": (0, 14)              # pH scale from 0 to 14
-    }
-    
-    y_min, y_max = y_min_max.get(column, (chart_data['value'].min(), chart_data['value'].max()))
-
+    chart_data = df[[column]].copy()
     if time_frame == 'Quarterly':
-        chart_data['date'] = chart_data['date'].dt.to_period('Q').astype(str)
-    
+        chart_data.index = chart_data.index.strftime('%Y Q%q ')
     if chart_type == 'Bar':
-        chart = alt.Chart(chart_data).mark_bar().encode(
-            x='date:T',
-            y=alt.Y('value:Q', scale=alt.Scale(domain=[y_min, y_max])),
-            tooltip=['date:T', 'value:Q']
-        )
-    elif chart_type == 'Area':
-        chart = alt.Chart(chart_data).mark_area().encode(
-            x='date:T',
-            y=alt.Y('value:Q', scale=alt.Scale(domain=[y_min, y_max])),
-            tooltip=['date:T', 'value:Q']
-        )
-
-    st.altair_chart(chart, use_container_width=True)
+        st.bar_chart(chart_data, y=column, height=height)
+    if chart_type == 'Area':
+        st.area_chart(chart_data, y=column, height=height)
 
 def calculate_delta(df, column):
     if len(df) < 2:
@@ -88,9 +64,12 @@ def calculate_delta(df, column):
 # Load data
 df = load_data()
 
+# Title with data source link
+st.title("Environmental Data Dashboard")
+st.markdown("[Data Source](https://www.kaggle.com/datasets/pranav941/hydroponics-feed)")
+
 # Set up input widgets
 with st.sidebar:
-    st.title("EDA Dashboard")
     st.header("⚙️ Settings")
     
     max_date = df['date'].max().date()
@@ -101,14 +80,8 @@ with st.sidebar:
     start_date = st.date_input("Start date", default_start_date, min_value=min_date, max_value=max_date)
     end_date = st.date_input("End date", default_end_date, min_value=min_date, max_value=max_date)
     
-    # Use session_state for remembering last selection or set defaults
-    if 'time_frame' not in st.session_state:
-        st.session_state.time_frame = 'Daily'
-    if 'chart_selection' not in st.session_state:
-        st.session_state.chart_selection = 'Area'
-
-    time_frame = st.selectbox("Select time frame", ("Daily", "Weekly", "Monthly", "Quarterly"), index=0, key='time_frame')
-    chart_selection = st.selectbox("Select a chart type", ("Bar", "Area"), index=1, key='chart_selection')
+    time_frame = st.selectbox("Select time frame", ("Daily", "Weekly", "Monthly", "Quarterly"))
+    chart_selection = st.selectbox("Select a chart type", ("Bar", "Area"))
 
 # Prepare data based on selected time frame
 if time_frame == 'Daily':
