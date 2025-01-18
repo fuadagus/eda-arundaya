@@ -6,6 +6,7 @@ The app's UI is built using pure Streamlit.
 
 <img src="/image.png">
 
+
 ## Demo App
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://dashboard-kit.streamlit.app/)
