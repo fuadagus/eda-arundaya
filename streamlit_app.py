@@ -101,8 +101,14 @@ with st.sidebar:
     start_date = st.date_input("Start date", default_start_date, min_value=min_date, max_value=max_date)
     end_date = st.date_input("End date", default_end_date, min_value=min_date, max_value=max_date)
     
-    time_frame = st.selectbox("Select time frame", ("Daily", "Weekly", "Monthly", "Quarterly"))
-    chart_selection = st.selectbox("Select a chart type", ("Bar", "Area"))
+    # Use session_state for remembering last selection or set defaults
+    if 'time_frame' not in st.session_state:
+        st.session_state.time_frame = 'Daily'
+    if 'chart_selection' not in st.session_state:
+        st.session_state.chart_selection = 'Area'
+
+    time_frame = st.selectbox("Select time frame", ("Daily", "Weekly", "Monthly", "Quarterly"), index=0, key='time_frame')
+    chart_selection = st.selectbox("Select a chart type", ("Bar", "Area"), index=1, key='chart_selection')
 
 # Prepare data based on selected time frame
 if time_frame == 'Daily':
