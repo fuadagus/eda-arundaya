@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import timedelta
 
 # Set page config
-st.set_page_config(page_title="EDA Dashboard", layout="wide")
+st.set_page_config(page_title="Environmental Data Dashboard", layout="wide")
 
 # Helper functions
 @st.cache_data
@@ -81,7 +81,9 @@ with st.sidebar:
     end_date = st.date_input("End date", default_end_date, min_value=min_date, max_value=max_date)
     
     time_frame = st.selectbox("Select time frame", ("Daily", "Weekly", "Monthly", "Quarterly"))
-    chart_selection = st.selectbox("Select a chart type", ("Bar", "Area"))
+    
+    # Default chart type is set to "Area"
+    chart_selection = st.selectbox("Select a chart type", ("Bar", "Area"), index=1)
 
 # Prepare data based on selected time frame
 if time_frame == 'Daily':
