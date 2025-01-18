@@ -5,6 +5,8 @@ This Streamlit dashboard app allows you to analyze a hypothetical YouTube channe
 The app's UI is built using pure Streamlit.
 
 <img src="/images/app-screenshot.png">
+![image](https://github.com/user-attachments/assets/56c3a7be-e150-477e-a732-1a65afd3394d)
+
 
 ## Demo App
 
