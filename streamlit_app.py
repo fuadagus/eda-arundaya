@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 from datetime import timedelta
 
-# Set page config
-st.set_page_config(page_title="EDA Dashboard", layout="wide")
+# Set page config to hide GitHub and fork buttons
+st.set_page_config(page_title="EDA Dashboard", layout="wide", initial_sidebar_state="expanded", page_icon="📊", hide_footer=True)
 
 # Helper functions
 @st.cache_data
