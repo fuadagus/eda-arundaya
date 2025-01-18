@@ -65,7 +65,7 @@ def calculate_delta(df, column):
 df = load_data()
 
 # Title with data source link
-st.title("Environmental Data Dashboard")
+st.title("EDA Dashboard")
 st.markdown("[Data Source](https://www.kaggle.com/datasets/pranav941/hydroponics-feed)")
 
 # Set up input widgets
