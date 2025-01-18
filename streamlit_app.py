@@ -47,13 +47,14 @@ def get_quarterly_data(df):
 def create_metric_chart(df, column, chart_type, height=150, time_frame='Daily'):
     chart_data = df[[column]].reset_index()
     chart_data.columns = ['date', 'value']
+    
+    # Efficient calculation of min and max
+    y_min = chart_data['value'].min()
+    y_max = chart_data['value'].max()
 
     if time_frame == 'Quarterly':
         chart_data['date'] = chart_data['date'].dt.to_period('Q').astype(str)
     
-    y_min = chart_data['value'].min()
-    y_max = chart_data['value'].max()
-
     if chart_type == 'Bar':
         chart = alt.Chart(chart_data).mark_bar().encode(
             x='date:T',
