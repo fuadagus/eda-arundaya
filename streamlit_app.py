@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import timedelta
 
 # Set page config
-st.set_page_config(page_title="Environmental Data Dashboard", layout="wide")
+st.set_page_config(page_title="EDA Dashboard", layout="wide")
 
 # Helper functions
 @st.cache_data
