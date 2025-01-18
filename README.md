@@ -20,10 +20,10 @@ The app's UI is built using pure Streamlit.
 - Interactive date range selection
 - Multiple time frame views (Daily, Weekly, Monthly, Quarterly)
 - Key metrics:
-  - Total Subscribers
-  - Total Views
-  - Total Watch Hours
-  - Total Likes
+  - Average pH
+  - Average Temperature
+  - Average Humidity
+  - Average Heat Index
 - Option to display bar or area charts
 - Data table view for detailed analysis
 
