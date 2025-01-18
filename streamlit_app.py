@@ -48,9 +48,15 @@ def create_metric_chart(df, column, chart_type, height=150, time_frame='Daily'):
     chart_data = df[[column]].reset_index()
     chart_data.columns = ['date', 'value']
     
-    # Efficient calculation of min and max
-    y_min = chart_data['value'].min()
-    y_max = chart_data['value'].max()
+    # Set static min and max based on context
+    y_min_max = {
+        "temperature": (-10, 50),  # Example range for temperature in °C
+        "humidity": (0, 100),      # Humidity in percentage
+        "heat_index": (0, 60),     # Heat index in °C
+        "pH": (0, 14)              # pH scale from 0 to 14
+    }
+    
+    y_min, y_max = y_min_max.get(column, (chart_data['value'].min(), chart_data['value'].max()))
 
     if time_frame == 'Quarterly':
         chart_data['date'] = chart_data['date'].dt.to_period('Q').astype(str)
